@@ -22,7 +22,6 @@ double lSpeedSet(double w){
 	else{
 		return 	1.5 + b*w/2;
 	}
-	return 1;
 }
 
 void yawCall(const std_msgs::Float64ConstPtr &msg){
@@ -35,7 +34,7 @@ void fpCall(const geometry_msgs::PointConstPtr &fPoint){
 		tws.linear.x = lSpeedSet(tws.angular.z);
 	}
 	else if(fPoint->x!=0 && fPoint->y!=0 && fPoint->z!=0){
-		tws.angular.z = 2.5*dYaw;
+		tws.angular.z = 0.2;
 		tws.linear.x = (4*fPoint->z - 1)*lSpeedSet(tws.angular.z);
 	}
 	else if(fPoint->x!=0 && fPoint->y==0 && fPoint->z==0){
@@ -44,7 +43,7 @@ void fpCall(const geometry_msgs::PointConstPtr &fPoint){
 			tws.linear.x = lSpeedSet(tws.angular.z);
 		}
 		else{
-			tws.angular.z = 2.5*dYaw+(0.6-fPoint->x);
+			tws.angular.z = 2.5*dYaw+(0.3);
 			tws.linear.x = lSpeedSet(tws.angular.z);
 		}
 	}
@@ -54,27 +53,31 @@ void fpCall(const geometry_msgs::PointConstPtr &fPoint){
 			tws.linear.x = lSpeedSet(tws.angular.z);
 		}
 		else{
-			tws.angular.z = 2.5*dYaw-(0.6-fPoint->y);
+			tws.angular.z = 2.5*dYaw-(0.3);
 			tws.linear.x = lSpeedSet(tws.angular.z);
 		}
 	}
 	else if(fPoint->x==0 && fPoint->y==0 && fPoint->z!=0){
 		if(dYaw>=0.5){
-			tws.angular.z = 2.5*dYaw-(0.6-fPoint->z);
-			tws.linear.x = lSpeedSet(tws.angular.z)*(4*fPoint->z - 1);
+			tws.angular.z = 2.5*dYaw-(0.3);
+			tws.linear.x = lSpeedSet(tws.angular.z)*2*(2.5*fPoint->z - 0.25);
 		}
 		else{
-			tws.angular.z = 2.5*dYaw+(0.6-fPoint->z);
-			tws.linear.x = lSpeedSet(tws.angular.z)*(4*fPoint->z - 1);
+			tws.angular.z = 2.5*dYaw+(0.3);
+			tws.linear.x = lSpeedSet(tws.angular.z)*2*(2.5*fPoint->z - 0.25);
 		}
 	}
 	else if(fPoint->x!=0 && fPoint->y==0 && fPoint->z!=0){
-		tws.angular.z = 2.5*dYaw+(0.6-fPoint->x);
-		tws.linear.x = lSpeedSet(tws.angular.z)*(4*fPoint->z - 1);
+		tws.angular.z = 2.5*dYaw+2*(0.6-fPoint->x);
+		tws.linear.x = lSpeedSet(tws.angular.z)*(2.5*fPoint->z - 0.25);
 	}
 	else if(fPoint->x==0 && fPoint->y!=0 && fPoint->z!=0){
-		tws.angular.z = 2.5*dYaw-(0.6-fPoint->y);
-		tws.linear.x = lSpeedSet(tws.angular.z)*(4*fPoint->z - 1);
+		tws.angular.z = 2.5*dYaw-2*(0.6-fPoint->y);
+		tws.linear.x = lSpeedSet(tws.angular.z)*(2.5*fPoint->z - 0.25);
+	}
+	else if(fPoint->x!=0 && fPoint->y!=0 && fPoint->z==0){
+		tws.angular.z = 3*dYaw;
+		tws.linear.x = lSpeedSet(tws.angular.z);
 	}
 	twsPub.publish(tws);
 }
