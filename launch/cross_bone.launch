@@ -1,0 +1,6 @@
+<launch>
+ <node name="cbcpu" pkg="race" type="cpu" output="screen"/>
+ <node name="cbcarrot" pkg="race" type="reader" />
+ <node name="cbfpoint" pkg="race" type="carrot" />
+ <node name="cbcontrol" pkg="race" type="rControl" />
+</launch>
