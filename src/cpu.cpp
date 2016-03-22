@@ -2,6 +2,7 @@
 #include <std_msgs/Float64.h>
 #include <geometry_msgs/Point.h>
 #include <geometry_msgs/Twist.h>
+#include <cmath>
 
 #define b 0.3
 
@@ -68,11 +69,21 @@ void fpCall(const geometry_msgs::PointConstPtr &fPoint){
 		}
 	}
 	else if(fPoint->x!=0 && fPoint->y==0 && fPoint->z!=0){
-		tws.angular.z = 2.5*dYaw+2*(0.6-fPoint->x);
+		if(std::abs(2.5*dYaw+2*(0.6-fPoint->x))>0.05){
+			tws.angular.z = 2.5*dYaw+2*(0.6-fPoint->x);
+		}
+		else{
+			tws.angular.z = 0.2;
+		}
 		tws.linear.x = lSpeedSet(tws.angular.z)*(2.5*fPoint->z - 0.25);
 	}
 	else if(fPoint->x==0 && fPoint->y!=0 && fPoint->z!=0){
-		tws.angular.z = 2.5*dYaw-2*(0.6-fPoint->y);
+		if(std::abs(2.5*dYaw-2*(0.6-fPoint->y))>0.05){
+			tws.angular.z = 2.5*dYaw-2*(0.6-fPoint->y);
+		}
+		else{
+			tws.angular.z = -0.2;
+		}
 		tws.linear.x = lSpeedSet(tws.angular.z)*(2.5*fPoint->z - 0.25);
 	}
 	else if(fPoint->x!=0 && fPoint->y!=0 && fPoint->z==0){
